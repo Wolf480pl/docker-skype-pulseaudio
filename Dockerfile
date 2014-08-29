@@ -1,5 +1,5 @@
-FROM debian:stable
-MAINTAINER Tom Parys "tom.parys+copyright@gmail.com"
+FROM debian:testing
+MAINTAINER Wolf480pl "wolf480@interia.pl"
 
 # Tell debconf to run in non-interactive mode
 ENV DEBIAN_FRONTEND noninteractive
@@ -45,9 +45,19 @@ RUN echo 'export PULSE_SERVER="tcp:localhost:64713"' >> /usr/local/bin/skype-pul
 RUN echo 'PULSE_LATENCY_MSEC=60 skype' >> /usr/local/bin/skype-pulseaudio
 RUN chmod 755 /usr/local/bin/skype-pulseaudio
 
+# We need dbus-launch to give skype its own dbus session bus
+RUN apt-get install -y dbus-x11
+
+COPY session-local.conf /etc/dbus-1/
 
 # Expose the SSH port
 EXPOSE 22
 
 # Start SSH
 ENTRYPOINT ["/usr/sbin/sshd",  "-D"]
+
+# Do not pass default command to sshd
+CMD []
+
+# Treat files in /home/docker (.ssh/authorized_keys, files created by skype and dbus) as data
+VOLUME /home/docker

@@ -1,0 +1,10 @@
+Host docker-skype
+  User      docker
+  Port      55555
+  HostName  127.0.0.1
+  RemoteForward 64713 localhost:4713
+  LocalForward 55560 localhost:55560
+  ForwardX11 yes
+  PasswordAuthentication no
+  ExitOnForwardFailure yes
+  IdentityFile ~/.ssh/docker_skype_id.rsa
